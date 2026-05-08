@@ -35,7 +35,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>powershell -Command "(Get-Date -Format 'yyyy.MM.dd') | Set-Content '$(ProjectDir)Resources\BuildDate.txt' -NoNewline"</PreBuildEvent>
+    <PreBuildEvent>pwsh -Command "(Get-Date -Format 'yyyy.MM.dd') | Set-Content -Path 'D:\Scott\Development\Projects\NovaPff\NovaPff\Resources\BuildDate.txt' -NoNewline"</PreBuildEvent>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -122,6 +122,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\novapff-icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NHQTools\NHQTools\NHQTools.csproj">
+      <Project>{ba34dd3c-6c5a-4482-9645-8789a3843059}</Project>
+      <Name>NHQTools</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -54,7 +54,31 @@ instead of the actual game directory, which can cause confusion when trying to f
 ---
 
 ## Building from Source
-1. **Requirements**: Windows 10+ with .NET Framework 4.8. Visual Studio 2022 or newer is recommended for designer support.
-2. **Compile**: Open `NovaPff.sln`, set your configuration to `Release|Any CPU`, and build the solution to generate `NHQTools.dll` and `NovaPff.exe`.
 
----
+### Requirements
+- Windows 10+
+- [.NET Framework 4.8](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net48)
+- Visual Studio 2022 or newer (recommended for designer support)
+
+### Steps
+
+1. **Clone the repository with submodules**
+   ```
+   git clone --recurse-submodules https://github.com/Novahq-net/NovaPff
+   ```
+   If you already cloned without `--recurse-submodules`, run:
+   ```
+   git submodule update --init --recursive
+   ```
+
+2. **Open the solution**
+   Open `NovaPff.sln` in Visual Studio 2022 or newer.
+
+3. **Set build configuration**
+   In the toolbar set the configuration to `Release` and platform to `Any CPU`.
+
+4. **Build the solution**
+   Go to **Build → Build Solution** (or press `Ctrl+Shift+B`) to generate `NHQTools.dll` and `NovaPff.exe`.
+
+5. **Output**
+   The built files will be located in `NovaPff\bin\Release\`.
