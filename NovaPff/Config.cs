@@ -20,7 +20,7 @@ namespace NovaPff
                 assembly, typeof(AssemblyTitleAttribute));
 
             AppName = titleAttr?.Title ?? assemblyName.Name;
-            AppVersion = $"{assemblyName.Version.Major}.{assemblyName.Version.Minor}";
+            AppVersion = $"{assemblyName.Version.Major}.{assemblyName.Version.Minor}.{assemblyName.Version.Build}";
             AppUrl = "https://novahq.net/";
             BuildDate = Properties.Resources.BuildDate?.Trim();
             AppUrlSuffix = $"{AppUrl}?app={Uri.EscapeDataString(AppName.Replace(" ", ""))}-v{AppVersion}b{BuildDate}";

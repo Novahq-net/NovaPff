@@ -1185,7 +1185,10 @@ namespace NovaPff
 
             if (!_pff.RenameEntry(entry, newName))
             {
-                // Revert the grid cell to the original name
+                // Revert the binding property back to the authoritative name
+                // FileNameEdit was already overwritten by the DataGridView binding
+                // before OnCellEndEdit fired, so we must manually reset it
+                entry.FileNameEdit = entry.FileNameStr;
                 DataGrid.InvalidateRow(rowIndex);
                 return;
             }
