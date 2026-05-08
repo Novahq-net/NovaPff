@@ -1,0 +1,3 @@
+[submodule "NHQTools"]
+	path = NHQTools
+	url = https://github.com/Novahq-net/NHQTools
