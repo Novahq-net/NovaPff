@@ -49,6 +49,7 @@ namespace NovaPff
         public bool ExportPakAlphaPngSuppress { get; set; }
         public bool ImportOverwriteSuppress { get; set; }
         public bool ImportResultSuppress { get; set; }
+        public bool SaveOver2GbSuppress { get; set; }
 
 
         #endregion

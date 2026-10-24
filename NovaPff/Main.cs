@@ -234,8 +234,8 @@ namespace NovaPff
         //////////////////////////////////////////////////////////////////////////////////////
         private void RefreshStatusStrip()
         {
-            long totalBytes = _pff.TotalDataSize;
-            long totalDeadSpaceBytes = _pff.TotalDeadSpaceSize;
+            var totalBytes = (long)_pff.TotalDataSize;
+            var totalDeadSpaceBytes = (long)_pff.TotalDeadSpaceSize;
 
             _mainStatusStrip.FileName.Value = _pff.SourceFile?.Name ?? "New.pff";
 
@@ -474,6 +474,37 @@ namespace NovaPff
 
                 preserveDeadSpace = mbr == DialogResult.Yes;
 
+            }
+
+            var estimatedSize = _pff?.EstimatedSaveSize(preserveDeadSpace) ?? 0;
+            if (estimatedSize > PffFile.MaxArchiveSize)
+            {
+                ShowError($"The PFF would be {((long)estimatedSize).ToFileSize()}, which exceeds the maximum PFF size (4GB)." + Environment.NewLine + Environment.NewLine +
+                          "Oversized PFF cannot be saved.", "Save Error");
+                return;
+            }
+
+            if (estimatedSize > PffFile.StockGameMaxArchiveSize && !_settings.SaveOver2GbSuppress)
+            {
+                var mbrSize = CustomMessageBox.ShowCheckBox(
+                    owner: this,
+                    text: $"This PFF will be {((long)estimatedSize).ToFileSize()}." + Environment.NewLine + Environment.NewLine +
+                          "Stock NovaLogic games cannot load PFFs over 2GB." + Environment.NewLine + Environment.NewLine +
+                          "Save anyway?",
+                    caption: "Large PFF Warning",
+                    checkBoxText: "Don't ask again",
+                    checkBoxResultAction: (dr, isChecked) =>
+                    {
+                        // Only suppress when the user agreed to save
+                        _settings.SaveOver2GbSuppress = dr == DialogResult.Yes && isChecked;
+                    },
+                    defaultCheckState: false,
+                    buttons: MessageBoxButtons.YesNo,
+                    icon: MessageBoxIcon.Warning
+                );
+
+                if (mbrSize != DialogResult.Yes)
+                    return;
             }
 
             // if saveAsDialog is TRUE or there is no source file because a new file was created, force Save As dialog
@@ -768,12 +799,12 @@ namespace NovaPff
         {
             // Filter invalid entries
             var exportList = entries
-                .Where(e => !e.DeadSpace && e.DataSize > 0)
+                .Where(e => !e.DeadSpace)
                 .ToList();
 
             if (exportList.Count == 0)
             {
-                ShowError(@"Unable to export dead space or 0 byte files.", @"Export Error");
+                ShowError(@"Unable to export dead space entries.", @"Export Error");
                 return;
             }
 
@@ -782,7 +813,7 @@ namespace NovaPff
 
             var conflicts = autoOverwrite
                 ? new List<PffEntry>() // Dummy list to skip the check
-                : exportList.Where(e => File.Exists(Path.Combine(destDir, e.FileNameStr))).ToList();
+                : exportList.Where(e => File.Exists(Path.Combine(destDir, e.FileNameSanitized))).ToList();
 
             if (conflicts.Any())
             {

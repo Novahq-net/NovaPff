@@ -47,6 +47,8 @@ namespace NovaPff
                 _settings.ExportResultSuppress = false;
                 _settings.PreserveDeadSpaceSuppress = false;
                 _settings.ExportMenuSingleSuppress = false;
+                _settings.ExportPakAlphaPngSuppress = false;
+                _settings.SaveOver2GbSuppress = false;
             }
 
             DialogResult = DialogResult.OK;

@@ -326,27 +326,35 @@ namespace NovaPff
         //////////////////////////////////////////////////////////////////////////////////////
         private static void OnCellToolTipTextNeeded(object sender, DataGridViewCellToolTipTextNeededEventArgs e)
         {
-
             if (e.RowIndex < 0 || e.ColumnIndex < 0) 
                 return;
 
             var grid = (DataGridView)sender;
+            var colName = grid.Columns[e.ColumnIndex].Name;
 
-            if (grid.Columns[e.ColumnIndex].Name != Columns.FileCrc) 
+            if (colName != Columns.FileCrc && colName != Columns.FileName)
                 return;
 
-            if (!(grid.Rows[e.RowIndex].DataBoundItem is PffEntry entry)) 
+            if (!(grid.Rows[e.RowIndex].DataBoundItem is PffEntry entry) || entry.DeadSpace) 
                 return;
 
-            // Calculate only on hover
-            if (entry.CrcStr.Contains("*"))
+            // 16-character name note (both columns)
+            if (entry.IsLongFileName)
+            {
+                e.ToolTipText = "16-character filename" + Environment.NewLine + Environment.NewLine +
+                                "16-character filenames don't store a proper CRC." + Environment.NewLine +
+                                "This is expected for long filenames." + Environment.NewLine + Environment.NewLine +
+                                "Computed CRC: " + entry.CrcComputed;
+                return;
+            }
+
+            if (colName == Columns.FileCrc && entry.CrcStr.Contains("*"))
             {
                 e.ToolTipText = "CRC Mismatch!" + Environment.NewLine + Environment.NewLine +
                                 "Stored: " + entry.CrcRead + Environment.NewLine +
                                 "Computed: " + entry.CrcComputed + Environment.NewLine + Environment.NewLine +
                                 "This does not seem to have any real impact.";
             }
-
         }
 
         //////////////////////////////////////////////////////////////////////////////////////
