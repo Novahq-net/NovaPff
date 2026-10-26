@@ -55,6 +55,7 @@ web.config
 *.pdb
 *.pem
 *.pfx
+*.proj*
 *.rar
 *.ret*
 *.secret
